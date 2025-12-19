@@ -40,6 +40,13 @@ jobs:
         echo "=== Modified settings.gradle.kts ==="
         cat settings.gradle.kts
 
+
+    - name: Add Flexbox dependency to app
+      run: |
+        sed -i '/dependencies {/a\    implementation '\''com.google.android:flexbox:3.0.0'\''' app/build.gradle
+        echo "=== Modified app/build.gradle ==="
+        grep "flexbox" app/build.gradle
+
     - name: Replace AnimatedBottomBar dependency
       run: |
         sed -i "s|implementation 'com.github.RepoDevil:AnimatedBottomBar:7fcb9af'|implementation(name: 'AnimatedBottomBar', ext: 'aar')|g" app/build.gradle
