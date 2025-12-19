@@ -48,6 +48,35 @@ jobs:
         echo "=== AnimatedBottomBar dependency ==="
         grep "AnimatedBottomBar" app/build.gradle
   
+    - name: Rename package names (runtime only)
+      run: |
+        sed -i 's/ani.dantotsu.beta/ani.dantotsu.betas/g' app/google-services.json
+        sed -i 's/ani.dantotsu.alpha/ani.dantotsu.alphas/g' app/google-services.json
+
+        echo "=== google-services.json (modified) ==="
+        grep "ani.dantotsu" app/google-services.json
+
+    - name: Update applicationIdSuffix (runtime only)
+      run: |
+        sed -i 's/applicationIdSuffix ".beta"/applicationIdSuffix ".betas"/g' app/build.gradle
+
+        echo "=== applicationIdSuffix ==="
+        grep "applicationIdSuffix" app/build.gradle
+
+    - name: Rename Alpha app name (runtime only)
+      run: |
+        sed -i 's/Dantotsu α/Santotsu α/g' app/src/alpha/res/values/strings.xml
+
+        echo "=== Alpha strings.xml ==="
+        cat app/src/alpha/res/values/strings.xml
+        
+    - name: Rename Beta app name (runtime only)
+      run: |
+        sed -i 's/Dantotsu β/Santotsu β/g' app/src/debug/res/values/strings.xml
+
+        echo "=== Debug strings.xml ==="
+        cat app/src/debug/res/values/strings.xml
+
 
     - name: Download last SHA artifact
       uses: dawidd6/action-download-artifact@v6
