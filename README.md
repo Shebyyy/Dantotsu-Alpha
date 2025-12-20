@@ -1,75 +1,78 @@
-# Hourly Preview Release of Dantotsu (Alpha)
+# Dantotsu Alpha Builds
 
-> [!NOTE]
->
-> * This repository **automatically compiles** the upstream **dev branch** of the official Dantotsu project:
->   ➡️ [https://git.rebelonion.dev/rebelonion/Dantotsu/src/branch/dev](https://git.rebelonion.dev/rebelonion/Dantotsu/src/branch/dev)
->
-> * Every hour, the workflow checks for upstream commits.
->   If new changes are detected → a fresh APK is built and released.
->
-> * All development is done by **rebelonion** and the official contributors.
->   This repository **does not modify any source code** — it only automates builds for quick access to the newest dev updates.
->
-> * These builds are intended for **testing, previewing, and development purposes only**.
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/Shebyyy/Dantotsu-Alpha?label=Latest%20Build&style=for-the-badge)](https://github.com/Shebyyy/Dantotsu-Alpha/releases)
+[![Build](https://img.shields.io/github/actions/workflow/status/Shebyyy/Dantotsu-Alpha/beta.yml?branch=dev&label=Build%20Status&style=for-the-badge)](https://github.com/Shebyyy/Dantotsu-Alpha/actions)
+
+This repository contains the automated build configuration for the **alpha version of the Dantotsu application**.
+
+> **What is Dantotsu?**
+> Dantotsu is a feature-rich Android client for anime streaming, designed to provide a seamless and enhanced viewing experience.
 
 ---
 
-## Alpha Build Information
+## 📥 How to Download
 
-> [!IMPORTANT]
->
-> * **All builds from this repository install separately as an Alpha app.**
-> * The app is published under a **different name and package name** to avoid conflicts.
->
-> **Alpha App Name:** `Santotsu α`
-> **Package Name:** `different from official Dantotsu`
->
-> ✅ This means:
->
-> * You **can install Santotsu alongside the official Dantotsu app**
-> * No overwrite, no uninstall required
-> * Safe for parallel testing
+Alpha builds are generated manually and are not officially released. You can download the latest APK directly from the **Actions** tab of this repository.
+
+1.  Navigate to the [**Actions**](https://github.com/Shebyyy/Dantotsu-Alpha/actions) page.
+2.  Select the most recent workflow run from the list.
+3.  Under the "Artifacts" section, you will find a file named `Dantotsu.apk`.
+4.  Click the download button to get the latest build.
+
+
+
 
 ---
 
-## Notes
+## 🔄 Side-by-Side Installation
 
-> [!WARNING]
->
-> * These Alpha builds use **different signing keys** from the official Dantotsu release.
-> * Releases are created **only when new upstream commits exist** (no empty builds).
-> * Manual workflow triggers are supported for testing or debugging upstream changes.
+This alpha build is modified to install as a **separate application** from the stable version of Dantotsu.
+
+This means you can have both versions installed on your device at the same time without any conflicts. The alpha build will have a slightly different name (e.g., "Santotsu") and a unique package ID to ensure this separation.
 
 ---
 
-## Developers
+## ⚠️ Important Disclaimer
 
-> [!TIP]
->
-> * Use these Alpha APKs to quickly test **upstream dev branch changes**.
-> * To contribute directly to Dantotsu development, request access to the Forgejo repo by contacting **rebelonion** via the **official Discord**.
+Please be aware that these are **alpha builds**. They are intended for testing and preview purposes only.
 
----
+*   **Unstable:** These builds may contain bugs, crashes, or unfinished features.
+*   **Not for Daily Use:** They are not recommended for daily use by the average user.
+*   **No Support:** Official support is not provided for alpha versions. Use them at your own risk.
 
-## Issues
-
-Please report bugs and issues **only to the upstream tracker**:
-➡️ [https://git.rebelonion.dev/rebelonion/Dantotsu/issues](https://git.rebelonion.dev/rebelonion/Dantotsu/issues)
+For a stable experience, please use the official release version of Dantotsu.
 
 ---
 
-## Credits
+## 🔧 How It Works
 
-All credit goes to **rebelonion** and the **official Dantotsu contributors**.
-This repository exists solely to automate builds and provide fast access to dev updates.
+This repository uses **GitHub Actions** to automatically build the Dantotsu application whenever a new build is triggered.
+
+The process is as follows:
+1.  **Checkout:** The workflow fetches the latest source code from the main project's Gitea repository.
+2.  **Patch & Modify:** It applies necessary patches to fix dependency issues and modifies the app's name and package ID to allow for side-by-side installation.
+3.  **Build:** The project is compiled and signed to produce an APK file.
+4.  **Upload:** The final APK is uploaded as a build artifact for easy access.
 
 ---
 
-If you want, I can also:
+## 🐛 Reporting Issues
 
-* Shorten this for a **Release Description**
-* Add a **FAQ section** (e.g., “Is this safe?”, “Who should use Alpha?”)
-* Add **badges** (build status, last commit, alpha tag)
+If you encounter a problem while using an alpha build, please report it on the **main project's issue tracker**.
 
-Just tell me 👍
+**[Click here to report an issue on Gitea](https://git.rebelonion.dev/rebelonion/Dantotsu/issues)**
+
+Please provide as much detail as possible, including steps to reproduce the issue and your device information.
+
+---
+
+## 🤝 Credits
+
+*   **Dantotsu:** All credit for the application itself goes to the original developers.
+*   **Source Code:** The official source code is hosted on [Gitea](https://git.rebelonion.dev/rebelonion/Dantotsu).
+
+---
+
+## 📄 License
+
+This project, including the automation scripts and build process, is licensed under the same license as the original Dantotsu application. Please refer to the main project repository for license details.
