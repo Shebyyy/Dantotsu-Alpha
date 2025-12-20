@@ -33,16 +33,6 @@
 
 ---
 
-## Obtainium Support
-
-> [!TIP]
-> You can track and auto-update this Alpha build using **Obtainium**:
-
-🔗 Obtainium Import Link:
-[https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22santotsu.alpha%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FShebyyy%2FDantotsu-Alpha%22%2C%22author%22%3A%22Shebyyy%22%2C%22name%22%3A%22Santotsu%20(Alpha)%22%2C%22preferredApkIndex%22%3A0%2C%22additionalSettings%22%3A%22%7B%5C%22includePrereleases%5C%22%3Atrue%2C%5C%22fallbackToOlderReleases%5C%22%3Atrue%2C%5C%22verifyLatestTag%5C%22%3Atrue%2C%5C%22sortMethodChoice%5C%22%3A%5C%22date%5C%22%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%7D%22%7D](https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22santotsu.alpha%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FShebyyy%2FDantotsu-Alpha%22%2C%22author%22%3A%22Shebyyy%22%2C%22name%22%3A%22Santotsu%20%28Alpha%29%22%2C%22preferredApkIndex%22%3A0%2C%22additionalSettings%22%3A%22%7B%5C%22includePrereleases%5C%22%3Atrue%2C%5C%22fallbackToOlderReleases%5C%22%3Atrue%2C%5C%22verifyLatestTag%5C%22%3Atrue%2C%5C%22sortMethodChoice%5C%22%3A%5C%22date%5C%22%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%7D%22%7D)
-
----
-
 ## Notes
 
 > [!WARNING]
