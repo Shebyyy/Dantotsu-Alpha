@@ -144,6 +144,23 @@ jobs:
     - name: List files in the directory
       run: ls -l
 
+    - name: Add Split APK Configuration
+      run: |
+        if ! grep -q "splits {" app/build.gradle; then
+          sed -i '/android {/a\
+              splits {\
+                  abi {\
+                      enable true\
+                      reset()\
+                      include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"\
+                      universalApk true\
+                  }\
+              }' app/build.gradle
+        fi
+
+        echo "=== Split APK configuration ==="
+        grep -A 10 "splits {" app/build.gradle
+
     - name: Setup JDK 17
       if: ${{ env.SKIP_BUILD != 'true' }}
       uses: actions/setup-java@v4
@@ -151,6 +168,7 @@ jobs:
         distribution: 'temurin'
         java-version: 17
         cache: gradle
+
 
     - name: Decode Keystore File
       run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $GITHUB_WORKSPACE/key.keystore
@@ -176,10 +194,31 @@ jobs:
       if: ${{ env.SKIP_BUILD != 'true' }}
       uses: actions/upload-artifact@v4
       with:
-          name: Dantotsu
+          name: Santotsu
           retention-days: 5
           compression-level: 9
-          path: "app/build/outputs/apk/google/alpha/app-google-alpha.apk"
+          path: "app/build/outputs/apk/google/alpha/*.apk"
+
+
+    - name: Create GitHub Release
+      if: ${{ env.SKIP_BUILD != 'true' }}
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: "alpha-${{ env.VERSION }}"
+        name: "Alpha Build – ${{ env.VERSION }}"
+        body: |
+          🚀 **New Alpha Build Released**
+
+          **Version:** ${{ env.VERSION }}
+
+          **Recent Commits:**
+          ${{ env.COMMIT_LOG }}
+
+          ⚠️ This is an **alpha build**. Expect bugs.
+        files: |
+          app/build/outputs/apk/google/alpha/*.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload APK to Discord and Telegram
       shell: bash
@@ -365,7 +404,7 @@ jobs:
         # Upload APK to Discord
         if [ "$SKIP_BUILD" != "true" ]; then
           curl -F "payload_json=${contentbody}" \
-               -F "dantotsu_debug=@app/build/outputs/apk/google/alpha/app-google-alpha.apk" \
+               -F "dantotsu_debug=@app/build/outputs/apk/google/alpha/*.apk" \
                ${{ secrets.DISCORD_WEBHOOK_ALPHA }}
         else
           echo "Skipping APK upload to Discord due to SKIP_BUILD being set to true"
@@ -397,7 +436,7 @@ jobs:
 
           # Upload APK to Telegram
           if [ "$SKIP_BUILD" != "true" ]; then
-            APK_PATH="app/build/outputs/apk/google/alpha/app-google-alpha.apk"
+            APK_PATH="app/build/outputs/apk/google/alpha/*.apk"
             response=$(curl -sS -f -X POST \
               "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
               -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
