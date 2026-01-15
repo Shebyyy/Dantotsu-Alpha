@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: Checkout from Gitea
       run: |
-        git clone --branch dev https://git.rebelonion.dev/Ahmed_h281/Dantotsu.git .
+        git clone --branch dev https://git.rebelonion.dev/rebelonion/Dantotsu.git .
         git fetch origin dev
         git checkout dev
         
@@ -118,9 +118,9 @@ jobs:
         fi
         echo "Commits since $LAST_SHA:"
         # Accumulate commit logs in a shell variable
-        COMMIT_LOGS=$(git log $LAST_SHA..HEAD --pretty=format:"● %s ~%an [֍](https://git.rebelonion.dev/Ahmed_h281/Dantotsu/commit/%H)" --max-count=10)
+        COMMIT_LOGS=$(git log $LAST_SHA..HEAD --pretty=format:"● %s ~%an [֍](https://git.rebelonion.dev/rebelonion/Dantotsu/commit/%H)" --max-count=10)
         # Replace commit messages with pull request links
-        COMMIT_LOGS=$(echo "$COMMIT_LOGS" | sed -E 's/#([0-9]+)/[#\1](https:\/\/git.rebelonion.dev\/Ahmed_h281\/Dantotsu\/pull\/\1)/g')
+        COMMIT_LOGS=$(echo "$COMMIT_LOGS" | sed -E 's/#([0-9]+)/[#\1](https:\/\/git.rebelonion.dev\/rebelonion\/Dantotsu\/pull\/\1)/g')
         # URL-encode the newline characters for GitHub Actions
         COMMIT_LOGS="${COMMIT_LOGS//'%'/'%25'}"
         COMMIT_LOGS="${COMMIT_LOGS//$'\n'/'%0A'}"
