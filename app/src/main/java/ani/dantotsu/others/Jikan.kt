@@ -20,7 +20,14 @@ object Jikan {
         val eps = mutableMapOf<String, Episode>()
         while (hasNextPage) {
             page++
-            val res = query<EpisodeResponse>("anime/$malId/episodes?page=$page")
+            val response = tryWithSuspend {
+                client.get("$apiUrl/anime/$malId/episodes?page=$page")
+            } ?: break
+            // Check for rate limit (429 status code)
+            if (response.statusCode == 429) {
+                break
+            }
+            val res = response.parsed<EpisodeResponse>()
             res?.data?.forEach {
                 val ep = it.malID.toString()
                 eps[ep] = Episode(
@@ -56,5 +63,3 @@ object Jikan {
     }
 
 }
-
-
