@@ -1,3 +1,4 @@
+
 package ani.dantotsu.others
 
 import ani.dantotsu.client
@@ -20,23 +21,26 @@ object Jikan {
         val eps = mutableMapOf<String, Episode>()
         while (hasNextPage) {
             page++
-            val response = tryWithSuspend {
-                client.get("$apiUrl/anime/$malId/episodes?page=$page")
-            } ?: break
-            // Check for rate limit (429 status code)
-            if (response.statusCode == 429) {
+            try {
+                val response = client.get("$apiUrl/anime/$malId/episodes?page=$page")
+                // Check for rate limit (429 status code)
+                if (response.statusCode == 429) {
+                    break
+                }
+                val res = response.parsed<EpisodeResponse>()
+                res?.data?.forEach {
+                    val ep = it.malID.toString()
+                    eps[ep] = Episode(
+                        ep, title = it.title,
+                        //Personal revenge with 34566 :prayge:
+                        filler = if (malId != 34566) it.filler else true,
+                    )
+                }
+                hasNextPage = res?.pagination?.hasNextPage == true
+            } catch (e: Exception) {
+                // If any exception occurs (including network errors), break
                 break
             }
-            val res = response.parsed<EpisodeResponse>()
-            res?.data?.forEach {
-                val ep = it.malID.toString()
-                eps[ep] = Episode(
-                    ep, title = it.title,
-                    //Personal revenge with 34566 :prayge:
-                    filler = if (malId != 34566) it.filler else true,
-                )
-            }
-            hasNextPage = res?.pagination?.hasNextPage == true
         }
         return eps
     }
@@ -61,5 +65,4 @@ object Jikan {
             val hasNextPage: Boolean? = null
         )
     }
-
 }
