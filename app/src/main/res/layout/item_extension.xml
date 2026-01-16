@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/extensionCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <ImageView
+        android:id="@+id/extensionPinImageView"
+        android:layout_width="40dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="-10dp"
+        android:layout_marginEnd="3dp"
+        android:src="@drawable/ic_round_equal_24"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/extensionIconImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="9dp"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:layout_width="245dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/extensionNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:text="@string/extension_name"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/extensionVersionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:text="@string/extension_version"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/subscriptionCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="12dp"
+        android:fontFamily="@font/poppins_bold"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/extensionSubscriptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0"
+        android:src="@drawable/ui_bg"
+        android:visibility="gone"
+        app:tint="?attr/colorOnBackground"
+        tools:ignore="ContentDescription"/>
+
+    <ImageView
+        android:id="@+id/updateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_round_sync_24"
+        app:tint="?attr/colorOnBackground"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/deleteTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_round_delete_24"
+        app:tint="?attr/colorOnBackground"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/settingsImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="0"
+        android:src="@drawable/ic_round_dots_vertical_24"
+        app:tint="?attr/colorOnBackground"
+        tools:ignore="ContentDescription" />
+
+</LinearLayout>

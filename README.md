@@ -1,78 +1,58 @@
-# Dantotsu Alpha Builds
+<p align="center">
+   <img src="https://pbxt.replicate.delivery/2PX94viD6lJSDVayQrGyDH7CGu7IjQ6e8HEtOGDeelefXRdOC/out.png" alt="Dantotsu Banner" width=100% >
+</p>
+<p align="center">
+   <img src="https://img.shields.io/badge/platforms-android-blueviolet?style=for-the-badge"/>
+   <a href="https://github.com/rebelonion/Dantotsu/releases"><img src="https://img.shields.io/github/downloads/rebelonion/Dantotsu/total?color=%233DDC84&logo=android&logoColor=%23fff&style=for-the-badge"></a>
+   <a href="https://www.codefactor.io/repository/github/rebelonion/dantotsu"><img src="https://www.codefactor.io/repository/github/rebelonion/dantotsu/badge?color=%233DDC84&logo=android&logoColor=%23fff&style=for-the-badge" alt="CodeFactor" /></a>
+   <a href="https://discord.gg/4HPZ5nAWwM"><img src="https://img.shields.io/discord/358599430502481920.svg?style=for-the-badge&logo=discord&colorB=7289DA"></a>
+</p>
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/Shebyyy/Dantotsu-Alpha?label=Latest%20Build&style=for-the-badge)](https://github.com/Shebyyy/Dantotsu-Alpha/releases)
-[![Build](https://img.shields.io/github/actions/workflow/status/Shebyyy/Dantotsu-Alpha/beta.yml?branch=dev&label=Build%20Status&style=for-the-badge)](https://github.com/Shebyyy/Dantotsu-Alpha/actions)
+# **Dantotsu** 🌟
 
-This repository contains the automated build configuration for the **alpha version of the Dantotsu application**.
+Dantotsu is an [Anilist](https://anilist.co/) only client.
 
-> **What is Dantotsu?**
-> Dantotsu is a feature-rich Android client for anime streaming, designed to provide a seamless and enhanced viewing experience.
+> **Dantotsu (断トツ; Dan-totsu)** literally means "the best of the best" in Japanese. Try it out for yourself and be the judge!
 
----
+## Terms of Use
+By downloading, installing, or using this application, you agree to:
+- Use the application in compliance with all applicable laws
+- Not use the application to infringe on copyrighted content
+- Take full responsibility for any extensions you install or use
+- Understand that the developer(s) are not responsible for third-party extensions or user actions
 
-## 📥 How to Download
+This application is designed for anime tracking and legal streaming service integration. The developers do not provide, maintain, or endorse any extensions that enable access to unauthorized content.
 
-Alpha builds are generated manually and are not officially released. You can download the latest APK directly from the **Actions** tab of this repository.
+## Important Notice
+This application is an anime tracking and management tool. The extension system is designed to integrate with legal streaming services like Jellyfin.
 
-1.  Navigate to the [**Actions**](https://github.com/Shebyyy/Dantotsu-Alpha/actions) page.
-2.  Select the most recent workflow run from the list.
-3.  Under the "Artifacts" section, you will find a file named `Dantotsu.apk`.
-4.  Click the download button to get the latest build.
+We do not:
+- Provide or maintain any streaming extensions
+- Host or distribute copyrighted content
+- Endorse or encourage copyright infringement
 
+Users are responsible for ensuring their use of this software complies with local laws and regulations.
 
+### 🚀 STAR THIS REPOSITORY TO SUPPORT THE DEVELOPER AND ENCOURAGE THE DEVELOPMENT OF THE APPLICATION!
 
+## WANT TO CONTRIBUTE? 🤝
 
----
+All contributions are welcome, from code to documentation to graphics to design suggestions to bug reports. Please use GitHub to its fullest; contribute Pull Requests, contribute tutorials or other content - whatever you have to offer, we can use!
 
-## 🔄 Side-by-Side Installation
+You can come hang out with our awesome community, request new features, and report any bugs or issues at our Discord server too. 📣
 
-This alpha build is modified to install as a **separate application** from the stable version of Dantotsu.
+### OFFICIAL DISCORD SERVER 🚀
 
-This means you can have both versions installed on your device at the same time without any conflicts. The alpha build will have a slightly different name (e.g., "Santotsu") and a unique package ID to ensure this separation.
+<p align="center">
+   <a href="https://discord.gg/4HPZ5nAWwM">
+      <img src="https://invidget.switchblade.xyz/4HPZ5nAWwM">
+   </a>
+</p>
 
----
+## VISITORS
 
-## ⚠️ Important Disclaimer
+<img src="https://count.getloli.com/get/@:rebeloniondantotsu" alt=":rebeloniondantotsu" />
 
-Please be aware that these are **alpha builds**. They are intended for testing and preview purposes only.
+## LICENSE 📜
 
-*   **Unstable:** These builds may contain bugs, crashes, or unfinished features.
-*   **Not for Daily Use:** They are not recommended for daily use by the average user.
-*   **No Support:** Official support is not provided for alpha versions. Use them at your own risk.
-
-For a stable experience, please use the official release version of Dantotsu.
-
----
-
-## 🔧 How It Works
-
-This repository uses **GitHub Actions** to automatically build the Dantotsu application whenever a new build is triggered.
-
-The process is as follows:
-1.  **Checkout:** The workflow fetches the latest source code from the main project's Gitea repository.
-2.  **Patch & Modify:** It applies necessary patches to fix dependency issues and modifies the app's name and package ID to allow for side-by-side installation.
-3.  **Build:** The project is compiled and signed to produce an APK file.
-4.  **Upload:** The final APK is uploaded as a build artifact for easy access.
-
----
-
-## 🐛 Reporting Issues
-
-If you encounter a problem while using an alpha build, please report it on the **main project's issue tracker**.
-
-**[Click here to report an issue on Gitea](https://git.rebelonion.dev/rebelonion/Dantotsu/issues)**
-
-Please provide as much detail as possible, including steps to reproduce the issue and your device information.
-
----
-
-## 🤝 Credits
-
-*   **Dantotsu:** All credit for the application itself goes to the original developers.
-*   **Source Code:** The official source code is hosted on [Gitea](https://git.rebelonion.dev/rebelonion/Dantotsu).
-
----
-
-## 📄 License
-
-This project, including the automation scripts and build process, is licensed under the same license as the original Dantotsu application. Please refer to the main project repository for license details.
+Dantotsu is licensed under the Unabandon Public License (UPL). More info can be found [here.](LICENSE.md)
