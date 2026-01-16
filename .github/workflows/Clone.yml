@@ -1,0 +1,133 @@
+name: Clone and Store Dantotsu
+
+on:
+  workflow_dispatch:
+
+jobs:
+  clone-and-store:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout your repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Clone Dantotsu from Gitea
+      run: |
+        # Remove all files except .git and .github
+        shopt -s extglob
+        rm -rf !(.|..|.git|.github)
+        
+        # Clone into temp directory
+        git clone --branch dev https://git.rebelonion.dev/rebelonion/Dantotsu.git temp
+        
+        # Move everything from temp to current directory
+        shopt -s dotglob
+        mv temp/* . 2>/dev/null || true
+        rm -rf temp
+
+    # ===== APPLY YOUR CUSTOM CHANGES =====
+    
+    - name: Rename package names
+      run: |
+        sed -i 's/ani.dantotsu.beta/ani.dantotsu.betas/g' app/google-services.json
+        sed -i 's/ani.dantotsu.alpha/ani.dantotsu.alphas/g' app/google-services.json
+        echo "✓ Updated package names in google-services.json"
+
+    - name: Update applicationIdSuffix
+      run: |
+        sed -i 's/applicationIdSuffix ".beta"/applicationIdSuffix ".betas"/g' app/build.gradle
+        echo "✓ Updated applicationIdSuffix in build.gradle"
+
+    - name: Rename Alpha app name
+      run: |
+        sed -i 's/Dantotsu α/Santotsu α/g' app/src/alpha/res/values/strings.xml
+        echo "✓ Renamed Alpha app to Santotsu α"
+
+    - name: Rename Beta app name
+      run: |
+        sed -i 's/Dantotsu β/Santotsu β/g' app/src/debug/res/values/strings.xml
+        echo "✓ Renamed Beta app to Santotsu β"
+
+    - name: Download AnimatedBottomBar
+      run: |
+        curl -L -o AnimatedBottomBar.zip \
+        https://raw.githubusercontent.com/Shebyyy/Dantotsu-Alpha/main/AnimatedBottomBar.zip
+        
+        mkdir -p app/libs
+        unzip AnimatedBottomBar.zip "**/*.aar" -d /tmp/abb
+        AAR=$(find /tmp/abb -name "*.aar" | head -n 1)
+        cp "$AAR" app/libs/AnimatedBottomBar.aar
+        echo "✓ Downloaded AnimatedBottomBar"
+
+    - name: Download FlexboxLayout
+      run: |
+        mkdir -p app/libs
+        curl -L -o app/libs/flexbox-3.0.0.aar \
+        https://dl.google.com/android/maven2/com/google/android/flexbox/flexbox/3.0.0/flexbox-3.0.0.aar
+        echo "✓ Downloaded FlexboxLayout"
+
+    - name: Update dependencies
+      run: |
+        # Add FlexboxLayout dependency
+        sed -i '/dependencies {/a\    implementation(name: '\''flexbox-3.0.0'\'', ext: '\''aar'\'')' app/build.gradle
+        
+        # Add flatDir to settings.gradle
+        sed -i '/maven("https:\/\/jitpack.io")/a\        flatDir { dirs("app/libs") }' settings.gradle.kts
+        
+        # Replace AnimatedBottomBar dependency
+        sed -i "s|implementation 'com.github.RepoDevil:AnimatedBottomBar:7fcb9af'|implementation(name: 'AnimatedBottomBar', ext: 'aar')|g" app/build.gradle
+        
+        echo "✓ Updated dependencies in build files"
+
+    - name: Add Split APK Configuration
+      run: |
+        if ! grep -q "splits {" app/build.gradle; then
+          sed -i '/android {/a\
+              splits {\
+                  abi {\
+                      enable true\
+                      reset()\
+                      include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"\
+                      universalApk true\
+                  }\
+              }' app/build.gradle
+          echo "✓ Added Split APK configuration"
+        else
+          echo "✓ Split APK configuration already exists"
+        fi
+
+    # ===== COMMIT EVERYTHING TO YOUR REPO =====
+
+    - name: Commit and Push changes
+      run: |
+        git add .
+        
+        # Create commit message with details
+        cat > commit_msg.txt << 'EOF'
+        Update from Dantotsu upstream with custom modifications
+
+        Changes applied:
+        - Renamed packages: ani.dantotsu.* → ani.dantotsu.*s
+        - Renamed app: Dantotsu → Santotsu
+        - Added AnimatedBottomBar AAR
+        - Added FlexboxLayout AAR
+        - Updated build dependencies
+        - Added Split APK configuration
+        
+        Source: https://git.rebelonion.dev/rebelonion/Dantotsu
+        Branch: dev
+        EOF
+        
+        git commit -F commit_msg.txt || echo "No changes to commit"
+        git push origin new
+        
+        echo "✅ Successfully cloned and updated repository!"
