@@ -46,8 +46,12 @@ query {
           number
           titles {
             canonical
+            canonicalLocale
           }
-          description
+          description {
+            en
+            enJp
+          }
           thumbnail {
             original {
               url
@@ -59,20 +63,26 @@ query {
   }
 }""".trimIndent()
 
-
         val result = getKitsuData(query) ?: return null
-        //Logger.log("Kitsu : result=$result")
+        Logger.log("Kitsu : result=${result.data?.lookupMapping?.episodes?.nodes?.size} episodes")
         media.idKitsu = result.data?.lookupMapping?.id
         val a = (result.data?.lookupMapping?.episodes?.nodes ?: return null).mapNotNull { ep ->
             val num = ep?.number?.toString() ?: return@mapNotNull null
+            // Try canonicalLocale first, then canonical
+            val title = ep.titles?.canonicalLocale ?: ep.titles?.canonical
+            // Try en description first, then enJp
+            val desc = ep.description?.en ?: ep.description?.enJp
+            
+            Logger.log("Kitsu episode $num: title='$title', desc='$desc'")
+            
             num to Episode(
                 number = num,
-                title = ep.titles?.canonical,
-                desc = ep.description?.en,
+                title = title,
+                desc = desc,
                 thumb = FileUrl[ep.thumbnail?.original?.url],
             )
         }.toMap()
-        //Logger.log("Kitsu : a=$a")
+        Logger.log("Kitsu : got ${a.size} episodes with metadata")
         return a
     }
 
@@ -124,7 +134,8 @@ query {
 
         @Serializable
         data class Description(
-            @SerialName("en") val en: String? = null
+            @SerialName("en") val en: String? = null,
+            @SerialName("enJp") val enJp: String? = null
         )
 
         @Serializable
@@ -139,9 +150,8 @@ query {
 
         @Serializable
         data class Titles(
-            @SerialName("canonical") val canonical: String? = null
+            @SerialName("canonical") val canonical: String? = null,
+            @SerialName("canonicalLocale") val canonicalLocale: String? = null
         )
-
     }
-
 }
