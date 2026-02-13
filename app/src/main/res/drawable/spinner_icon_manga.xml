@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingStart="0dp"
+    android:paddingLeft="0dp"
+    android:paddingEnd="32dp"
+    android:paddingRight="0dp"
+    android:paddingMode="stack">
+
+    <item
+        android:width="48dp"
+        android:drawable="@drawable/control_background_40dp"
+        android:gravity="end|fill_vertical"
+        tools:ignore="UnusedAttribute" />
+
+    <item
+        android:width="24dp"
+        android:height="24dp"
+        android:drawable="@drawable/ic_round_collections_bookmark_24"
+        android:end="12dp"
+        android:gravity="end|center_vertical"
+        tools:ignore="UnusedAttribute"
+        tools:targetApi="m" />
+</layer-list>
