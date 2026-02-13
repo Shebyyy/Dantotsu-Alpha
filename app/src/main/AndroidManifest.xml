@@ -41,7 +41,7 @@
         android:name="android.permission.READ_APP_SPECIFIC_LOCALES"
         tools:ignore="ProtectedPermissions" />
 
-    <!-- ExoPlayer: Bluetooth Headsets -->
+    <!-- Bluetooth Headsets -->
     <uses-feature
         android:name="android.hardware.bluetooth"
         android:required="false" />
@@ -50,7 +50,6 @@
         android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <!-- ExoPlayer: Bluetooth Headsets -->
 
     <queries>
         <package android:name="idm.internet.download.manager.plus" />
@@ -246,8 +245,10 @@
             android:exported="true"
             android:process=":error_process"
             android:launchMode="singleTask" />
+        
+        <!-- CHANGED: ExoplayerView to MPVView -->
         <activity
-            android:name=".media.anime.ExoplayerView"
+            android:name=".media.anime.MPVView"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -255,6 +256,7 @@
             android:launchMode="singleTask"
             android:supportsPictureInPicture="true"
             tools:targetApi="n" />
+            
         <activity
             android:name=".connections.anilist.Login"
             android:configChanges="orientation|screenSize|layoutDirection"
@@ -464,18 +466,10 @@
             android:exported="false"
             android:foregroundServiceType="dataSync" />
         <service
-            android:name="androidx.media3.exoplayer.scheduler.PlatformScheduler$PlatformSchedulerService"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
             android:name=".addons.torrent.TorrentServerService"
             android:exported="false"
             android:foregroundServiceType="dataSync"
             android:stopWithTask="true" />
-
-        <meta-data
-            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="androidx.media3.cast.DefaultCastOptionsProvider" />
     </application>
 
 </manifest>

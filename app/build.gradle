@@ -116,15 +116,8 @@ dependencies {
     ksp "com.github.bumptech.glide:ksp:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
-
-//  Exoplayer
-    ext.exo_version = '1.6.1'
-    implementation "androidx.media3:media3-exoplayer:$exo_version"
-    implementation "androidx.media3:media3-ui:$exo_version"
-    implementation "androidx.media3:media3-exoplayer-hls:$exo_version"
-    implementation "androidx.media3:media3-exoplayer-dash:$exo_version"
-    implementation "androidx.media3:media3-datasource-okhttp:$exo_version"
-    implementation "androidx.media3:media3-session:$exo_version"
+// MPV Android
+implementation 'is.xyz.mpv:mpv-android:1.0.2'
 //  Media3 Casting
     implementation "androidx.media3:media3-cast:$exo_version"
     implementation "androidx.mediarouter:mediarouter:1.7.0"

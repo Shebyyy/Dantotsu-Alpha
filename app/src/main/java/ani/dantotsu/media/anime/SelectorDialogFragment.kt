@@ -291,9 +291,9 @@ class SelectorDialogFragment : BottomSheetDialogFragment() {
                                 video.file.url = extension.getLink(currentTorrent, index)
                                 Logger.log("Received: ${video.file.url}")
                                 if (launch == true) {
-                                    Intent(activity, ExoplayerView::class.java).apply {
-                                        ExoplayerView.media = media
-                                        ExoplayerView.initialized = true
+                                    Intent(activity, MPVView::class.java).apply {
+                                        MPVView.media = media
+                                        MPVView.initialized = true
                                         startActivity(this)
                                     }
                                 } else {
@@ -341,9 +341,9 @@ class SelectorDialogFragment : BottomSheetDialogFragment() {
         dismiss()
         if (launch!!) {
             stopAddingToList()
-            val intent = Intent(activity, ExoplayerView::class.java)
-            ExoplayerView.media = media
-            ExoplayerView.initialized = true
+            val intent = Intent(activity, MPVView::class.java)
+            MPVView.media = media
+            MPVView.initialized = true
             startActivity(intent)
         } else {
             model.setEpisode(
