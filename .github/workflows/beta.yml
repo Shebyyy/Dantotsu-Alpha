@@ -80,6 +80,16 @@ jobs:
         run: |
           git clone --branch dev https://git.rebelonion.dev/rebelonion/Dantotsu.git .
 
+      - name: Apply Santotsu Alpha renaming
+        run: |
+          sed -i 's/ani.dantotsu.beta/ani.dantotsu.betas/g' app/google-services.json || true
+          sed -i 's/ani.dantotsu.alpha/ani.dantotsu.alphas/g' app/google-services.json || true
+
+          sed -i 's/applicationIdSuffix *= *".beta"/applicationIdSuffix = ".betas"/g' app/build.gradle.kts
+
+          sed -i 's/Dantotsu α/Santotsu α/g' app/src/alpha/res/values/strings.xml || true
+          sed -i 's/Dantotsu β/Santotsu β/g' app/src/debug/res/values/strings.xml || true
+
       - name: Fetch full history for commit log
         run: |
           if [ -n "${{ needs.check-updates.outputs.LAST_SHA }}" ]; then
@@ -142,7 +152,7 @@ jobs:
       - name: Build APKs
         run: |
           chmod +x ./gradlew
-          ./gradlew assembleGoogleRelease \
+          ./gradlew assembleGoogleAlpha \
             -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/key.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
@@ -150,11 +160,11 @@ jobs:
 
       - name: Process APKs and Generate Checksums
         run: |
-          cd app/build/outputs/apk/google/release/
-          if [ -f "app-google-universal-release.apk" ]; then
-            UNIVERSAL="app-google-universal-release.apk"
-          elif [ -f "app-google-release.apk" ]; then
-            UNIVERSAL="app-google-release.apk"
+          cd app/build/outputs/apk/google/alpha/
+          if [ -f "app-google-universal-alpha.apk" ]; then
+            UNIVERSAL="app-google-universal-alpha.apk"
+          elif [ -f "app-google-alpha.apk" ]; then
+            UNIVERSAL="app-google-alpha.apk"
           fi
           
           {
@@ -189,18 +199,18 @@ jobs:
           name: Santotsu-APKs
           retention-days: 5
           compression-level: 9
-          path: app/build/outputs/apk/google/release/*.apk
+          path: app/build/outputs/apk/google/alpha/*.apk
 
       - name: Upload to Telegram
         env:
           VERSION: ${{ needs.check-updates.outputs.VERSION }}
           COMMIT_LOG: ${{ steps.commit-log.outputs.COMMIT_LOG }}
         run: |
-          cd app/build/outputs/apk/google/release/
-          if [ -f "app-google-universal-release.apk" ]; then
-            APK_PATH="app-google-universal-release.apk"
-          elif [ -f "app-google-release.apk" ]; then
-            APK_PATH="app-google-release.apk"
+          cd app/build/outputs/apk/google/alpha/
+          if [ -f "app-google-universal-alpha.apk" ]; then
+            APK_PATH="app-google-universal-alpha.apk"
+          elif [ -f "app-google-alpha.apk" ]; then
+            APK_PATH="app-google-alpha.apk"
           else
             echo "No universal APK found!"
             exit 1
@@ -242,7 +252,7 @@ jobs:
           name: Santotsu v${{ needs.check-updates.outputs.VERSION }}
           bodyFile: commit_log_santotsu.txt
           artifacts: |
-            app/build/outputs/apk/google/release/*.apk
+            app/build/outputs/apk/google/alpha/*.apk
             last_sha.txt
           token: ${{ secrets.GITHUB_TOKEN }}
           makeLatest: true
