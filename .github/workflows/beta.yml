@@ -77,11 +77,11 @@ jobs:
 
     - name: Update applicationIdSuffix (runtime only)
       run: |
-        sed -i 's/applicationIdSuffix ".beta"/applicationIdSuffix ".betas"/g' app/build.gradle
+        sed -i 's/applicationIdSuffix *= *".beta"/applicationIdSuffix = ".betas"/g' app/build.gradle.kts
 
         echo "=== applicationIdSuffix ==="
-        grep "applicationIdSuffix" app/build.gradle
-
+        grep "applicationIdSuffix" app/build.gradle.kts
+        
     - name: Rename Alpha app name (runtime only)
       run: |
         sed -i 's/Dantotsu α/Santotsu α/g' app/src/alpha/res/values/strings.xml
