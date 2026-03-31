@@ -147,20 +147,7 @@ jobs:
           fi
 
       - name: Decode Keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_FILE }}" | tr -d ' \n\r' | base64 -d > $GITHUB_WORKSPACE/key.keystore
-          echo "Keystore size: $(wc -c < $GITHUB_WORKSPACE/key.keystore) bytes"
-
-      - name: Convert Keystore to Compatible Format
-        run: |
-          keytool -importkeystore \
-            -srckeystore $GITHUB_WORKSPACE/key.keystore \
-            -destkeystore $GITHUB_WORKSPACE/key_compat.keystore \
-            -deststoretype JKS \
-            -srcstorepass ${{ secrets.KEYSTORE_PASSWORD }} \
-            -deststorepass ${{ secrets.KEYSTORE_PASSWORD }} \
-            -noprompt
-          mv $GITHUB_WORKSPACE/key_compat.keystore $GITHUB_WORKSPACE/key.keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $GITHUB_WORKSPACE/key.keystore
 
       - name: Build APKs
         run: |
