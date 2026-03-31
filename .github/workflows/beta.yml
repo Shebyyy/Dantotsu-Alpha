@@ -149,6 +149,17 @@ jobs:
       - name: Decode Keystore
         run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > $GITHUB_WORKSPACE/key.keystore
 
+      - name: Convert Keystore to Compatible Format
+        run: |
+          keytool -importkeystore \
+            -srckeystore $GITHUB_WORKSPACE/key.keystore \
+            -destkeystore $GITHUB_WORKSPACE/key_compat.keystore \
+            -deststoretype JKS \
+            -srcstorepass ${{ secrets.KEYSTORE_PASSWORD }} \
+            -deststorepass ${{ secrets.KEYSTORE_PASSWORD }} \
+            -noprompt
+          mv $GITHUB_WORKSPACE/key_compat.keystore $GITHUB_WORKSPACE/key.keystore
+
       - name: Build APKs
         run: |
           chmod +x ./gradlew
