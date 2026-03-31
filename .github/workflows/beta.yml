@@ -147,7 +147,9 @@ jobs:
           fi
 
       - name: Decode Keystore
-        run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > $GITHUB_WORKSPACE/key.keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_FILE }}" | tr -d ' \n\r' | base64 -d > $GITHUB_WORKSPACE/key.keystore
+          echo "Keystore size: $(wc -c < $GITHUB_WORKSPACE/key.keystore) bytes"
 
       - name: Convert Keystore to Compatible Format
         run: |
