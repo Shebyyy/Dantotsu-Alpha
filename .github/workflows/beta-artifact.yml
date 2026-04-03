@@ -1,0 +1,159 @@
+name: Build and Artifact Santotsu
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-artifact
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_numbers:
+        description: "PR numbers to merge before build (comma-separated, e.g. 123,456)"
+        required: false
+        default: ""
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        run: |
+          git clone --branch dev https://git.rebelonion.dev/rebelonion/Dantotsu.git .
+
+      - name: Merge PRs
+        if: ${{ github.event.inputs.pr_numbers != '' }}
+        run: |
+          git config user.email "ci@github.com"
+          git config user.name "GitHub Actions"
+
+          IFS=',' read -ra PRS <<< "${{ github.event.inputs.pr_numbers }}"
+          for PR in "${PRS[@]}"; do
+            PR=$(echo "$PR" | tr -d ' ')
+            echo "Fetching PR #$PR..."
+            git fetch origin "refs/pull/${PR}/head:pr-${PR}"
+            echo "Merging PR #$PR..."
+            git merge --no-ff "pr-${PR}" -m "Merge PR #${PR} for artifact build" || {
+              echo "❌ Failed to merge PR #$PR — aborting"
+              exit 1
+            }
+            echo "✅ PR #$PR merged successfully"
+          done
+
+      - name: Extract Version
+        id: version
+        run: |
+          VER=$(grep -E -o 'versionName = "[^"]*"' app/build.gradle.kts | cut -d'"' -f2)
+          SHA=$(git rev-parse HEAD)
+          VERSION="${VER}+${SHA:0:7}"
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Apply Santotsu Alpha renaming
+        run: |
+          sed -i 's/ani.dantotsu.beta/ani.dantotsu.betas/g' app/google-services.json || true
+          sed -i 's/ani.dantotsu.alpha/ani.dantotsu.alphas/g' app/google-services.json || true
+
+          sed -i 's/applicationIdSuffix *= *".beta"/applicationIdSuffix = ".betas"/g' app/build.gradle.kts
+
+          sed -i 's/Dantotsu α/Santotsu α/g' app/src/alpha/res/values/strings.xml || true
+          sed -i 's/Dantotsu β/Santotsu β/g' app/src/debug/res/values/strings.xml || true
+
+      - name: Generate Commit Log
+        id: commit-log
+        run: |
+          REPO_URL="https://git.rebelonion.dev/rebelonion/Dantotsu"
+          LAST_10=$(git log HEAD --pretty=format:"● %s ~%an [֍](${REPO_URL}/commit/%H)" --max-count=10)
+          if [ -z "$LAST_10" ]; then
+            LAST_10="● No commits found"
+          fi
+          LAST_10=$(echo "$LAST_10" | sed -E "s@#([0-9]+)@[#\1](${REPO_URL}/pull/\1)@g")
+          echo "COMMIT_LOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$LAST_10" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo -e "Commits:\n" > commit_log.txt
+          echo "$LAST_10" | sed 's/●/\n●/g' | sed '/^$/d' >> commit_log.txt
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: 17
+          cache: gradle
+
+      - name: Add Split APK Configuration
+        run: |
+          if ! grep -q "splits {" app/build.gradle.kts; then
+            sed -i '/^android {/a\
+                splits {\
+                    abi {\
+                        isEnable = true\
+                        reset()\
+                        include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")\
+                        isUniversalApk = true\
+                    }\
+                }' app/build.gradle.kts
+          fi
+
+      - name: Decode Keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $GITHUB_WORKSPACE/key.keystore
+
+      - name: Build APKs
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleGoogleAlpha \
+            -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/key.keystore \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}
+
+      - name: Process APKs and Generate Checksums
+        run: |
+          cd app/build/outputs/apk/google/alpha/
+          if [ -f "app-google-universal-alpha.apk" ]; then
+            UNIVERSAL="app-google-universal-alpha.apk"
+          elif [ -f "app-google-alpha.apk" ]; then
+            UNIVERSAL="app-google-alpha.apk"
+          fi
+
+          {
+            echo -e "\n---\n### Checksums\n"
+            echo "| Variant | SHA-256 |"
+            echo "| ------- | ------- |"
+            if [ -n "$UNIVERSAL" ]; then
+              SHA=$(sha256sum "$UNIVERSAL" | cut -d' ' -f1)
+              echo "| Universal | $SHA |"
+            fi
+            for apk in app-google-*-alpha.apk; do
+              [ "$apk" = "$UNIVERSAL" ] && continue
+              [ "$apk" = "app-google-*-alpha.apk" ] && continue
+              ABI=$(echo "$apk" | sed 's/app-google-//' | sed 's/-alpha.apk//')
+              SHA=$(sha256sum "$apk" | cut -d' ' -f1)
+              echo "| $ABI | $SHA |"
+            done
+            echo -e "\n---\n"
+          } > $GITHUB_WORKSPACE/checksums.txt
+
+          cd $GITHUB_WORKSPACE
+          {
+            cat commit_log.txt
+            cat checksums.txt
+          } > commit_log_santotsu.txt
+
+      - name: Upload APK Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Santotsu-APKs-v${{ steps.version.outputs.VERSION }}
+          retention-days: 7
+          compression-level: 9
+          path: app/build/outputs/apk/google/alpha/*.apk
+
+      - name: Upload Commit Log Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: commit-log
+          path: commit_log_santotsu.txt
+          retention-days: 7
