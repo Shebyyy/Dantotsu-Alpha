@@ -143,13 +143,64 @@ jobs:
             cat checksums.txt
           } > commit_log_santotsu.txt
 
-      - name: Upload APK Artifacts
+      - name: Upload APK Artifacts Separately
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          for apk in app/build/outputs/apk/google/alpha/*.apk; do
+            FILENAME=$(basename "$apk" .apk)
+            echo "Uploading $FILENAME..."
+            echo "APK_PATH=$apk" >> $GITHUB_ENV
+            echo "APK_NAME=${FILENAME}-v${VERSION}" >> $GITHUB_ENV
+          done
+
+      - name: Stage APKs into separate folders
+        run: |
+          mkdir -p /tmp/apks
+          for apk in app/build/outputs/apk/google/alpha/*.apk; do
+            FILENAME=$(basename "$apk" .apk)
+            mkdir -p "/tmp/apks/$FILENAME"
+            cp "$apk" "/tmp/apks/$FILENAME/"
+          done
+
+      - name: Upload Universal APK
         uses: actions/upload-artifact@v4
         with:
-          name: Santotsu-APKs-v${{ steps.version.outputs.VERSION }}
+          name: Santotsu-universal-v${{ steps.version.outputs.VERSION }}
           retention-days: 7
-          compression-level: 9
-          path: app/build/outputs/apk/google/alpha/*.apk
+          compression-level: 0
+          path: /tmp/apks/app-google-universal-alpha/
+
+      - name: Upload arm64-v8a APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Santotsu-arm64-v8a-v${{ steps.version.outputs.VERSION }}
+          retention-days: 7
+          compression-level: 0
+          path: /tmp/apks/app-google-arm64-v8a-alpha/
+
+      - name: Upload armeabi-v7a APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Santotsu-armeabi-v7a-v${{ steps.version.outputs.VERSION }}
+          retention-days: 7
+          compression-level: 0
+          path: /tmp/apks/app-google-armeabi-v7a-alpha/
+
+      - name: Upload x86_64 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Santotsu-x86_64-v${{ steps.version.outputs.VERSION }}
+          retention-days: 7
+          compression-level: 0
+          path: /tmp/apks/app-google-x86_64-alpha/
+
+      - name: Upload x86 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Santotsu-x86-v${{ steps.version.outputs.VERSION }}
+          retention-days: 7
+          compression-level: 0
+          path: /tmp/apks/app-google-x86-alpha/
 
       - name: Upload Commit Log Artifact
         uses: actions/upload-artifact@v4
