@@ -27,6 +27,7 @@ jobs:
 
       - name: Checkout Repository
         run: |
+          find . -mindepth 1 -delete
           git clone --branch dev https://git.rebelonion.dev/rebelonion/Dantotsu.git .
 
       - name: Merge PRs
