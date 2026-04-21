@@ -76,6 +76,11 @@ jobs:
     if: needs.check-updates.outputs.SHOULD_RUN == 'true'
 
     steps:
+      - name: Save Santotsu patches
+        uses: actions/checkout@v4
+
+      - run: cp .github/patches/AppUpdater.kt /tmp/AppUpdater.kt
+
       - name: Checkout Repository
         run: |
           git clone --branch dev https://git.rebelonion.dev/rebelonion/Dantotsu.git .
@@ -89,6 +94,19 @@ jobs:
 
           sed -i 's/Dantotsu α/Santotsu α/g' app/src/alpha/res/values/strings.xml || true
           sed -i 's/Dantotsu β/Santotsu β/g' app/src/debug/res/values/strings.xml || true
+
+      - name: Embed version with SHA into BuildConfig
+        run: |
+          VER=$(grep -E -o 'versionName = "[^"]*"' app/build.gradle.kts | cut -d'"' -f2)
+          sed -i "s|versionName = \"${VER}\"|versionName = \"${{ needs.check-updates.outputs.VERSION }}\"|" app/build.gradle.kts
+
+      - name: Point update checker to Santotsu repo
+        run: |
+          sed -i 's|<string name="repo" translatable="false">rebelonion/Dantotsu</string>|<string name="repo" translatable="false">Shebyyy/Dantotsu-Alpha</string>|' app/src/main/res/values/strings.xml
+
+      - name: Patch AppUpdater for Santotsu
+        run: |
+          cp /tmp/AppUpdater.kt app/src/google/java/ani/dantotsu/others/AppUpdater.kt
 
       - name: Fetch full history for commit log
         run: |
