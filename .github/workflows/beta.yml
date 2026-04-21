@@ -83,6 +83,7 @@ jobs:
 
       - name: Checkout Repository
         run: |
+          find . -mindepth 1 -delete
           git clone --branch dev https://git.rebelonion.dev/rebelonion/Dantotsu.git .
 
       - name: Apply Santotsu Alpha renaming
@@ -99,6 +100,7 @@ jobs:
         run: |
           VER=$(grep -E -o 'versionName = "[^"]*"' app/build.gradle.kts | cut -d'"' -f2)
           sed -i "s|versionName = \"${VER}\"|versionName = \"${{ needs.check-updates.outputs.VERSION }}\"|" app/build.gradle.kts
+          sed -i 's|versionCode = (versionName|versionCode = (versionName?.split("+")?.first()|' app/build.gradle.kts
 
       - name: Point update checker to Santotsu repo
         run: |

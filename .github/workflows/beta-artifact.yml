@@ -72,6 +72,7 @@ jobs:
         run: |
           VER=$(grep -E -o 'versionName = "[^"]*"' app/build.gradle.kts | cut -d'"' -f2)
           sed -i "s|versionName = \"${VER}\"|versionName = \"${{ steps.version.outputs.VERSION }}\"|" app/build.gradle.kts
+          sed -i 's|versionCode = (versionName|versionCode = (versionName?.split("+")?.first()|' app/build.gradle.kts
 
       - name: Point update checker to Santotsu repo
         run: |
