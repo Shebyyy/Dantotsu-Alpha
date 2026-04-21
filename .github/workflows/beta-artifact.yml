@@ -81,6 +81,7 @@ jobs:
       - name: Patch AppUpdater for Santotsu
         run: |
           cp /tmp/AppUpdater.kt app/src/google/java/ani/dantotsu/others/AppUpdater.kt
+          sed -i 's/\r$//' app/src/google/java/ani/dantotsu/others/AppUpdater.kt
 
       - name: Generate Commit Log
         id: commit-log
