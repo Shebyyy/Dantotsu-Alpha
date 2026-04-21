@@ -18,7 +18,9 @@ import ani.dantotsu.Mapper
 import ani.dantotsu.R
 import ani.dantotsu.buildMarkwon
 import ani.dantotsu.client
+import ani.dantotsu.connections.comments.CommentsAPI
 import ani.dantotsu.currContext
+import ani.dantotsu.decodeBase64ToString
 import ani.dantotsu.logError
 import ani.dantotsu.openLinkInBrowser
 import ani.dantotsu.settings.saving.PrefManager
@@ -76,7 +78,6 @@ object AppUpdater {
             val v = r.tagName.substringAfter("v", "")
             (r.body ?: "") to v.ifEmpty { throw Exception("Weird Version : ${r.tagName}") }
         } else {
-            // Santotsu: use releases/latest API instead of stable.md
             val response = client.get("https://api.github.com/repos/$repo/releases/latest")
                 .parsed<GithubResponse>()
             val v = response.tagName.substringAfter("v", "")
@@ -109,8 +110,7 @@ object AppUpdater {
             .parsed<GithubResponse>().assets?.filter {
                 it.browserDownloadURL.endsWith(".apk")
             }
-        // Santotsu: prefer universal APK, then fall back to first available
-        return apks?.find { it.browserDownloadURL.contains("universal") }
+        return apks?.find { it.browserDownloadURL.contains("universal") }?.browserDownloadURL
             ?: apks?.firstOrNull()?.browserDownloadURL
     }
 
@@ -182,8 +182,6 @@ object AppUpdater {
     private fun compareVersion(version: String): Boolean {
         return when (BuildConfig.BUILD_TYPE) {
             "debug" -> BuildConfig.VERSION_NAME != version
-            // Santotsu: alpha builds include SHA in versionName (e.g. "3.2.1+a1b2c3d")
-            // so a simple string comparison detects new builds
             "alpha" -> BuildConfig.VERSION_NAME != version
             else -> {
                 fun toDoubleSafe(list: List<String>): Double {
