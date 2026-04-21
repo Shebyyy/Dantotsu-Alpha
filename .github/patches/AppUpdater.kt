@@ -123,14 +123,15 @@ object AppUpdater {
         if (post) snackString(currContext()?.getString(R.string.checking_for_update))
         val repo = activity.getString(R.string.repo)
         tryWithSuspend {
-            val (md, version) = fetchUpdateInfo(repo, BuildConfig.DEBUG) ?: return@tryWithSuspend
+            val isDebug = BuildConfig.BUILD_TYPE == "debug"
+            val (md, version) = fetchUpdateInfo(repo, isDebug) ?: return@tryWithSuspend
 
             Logger.log("Git Version : $version")
             val dontShow = PrefManager.getCustomVal("dont_ask_for_update_$version", false)
             if (compareVersion(version) && !dontShow && !activity.isDestroyed) activity.runOnUiThread {
                 CustomBottomDialog.newInstance().apply {
                     setTitleText(
-                        "${if (BuildConfig.DEBUG) "Beta " else ""}Update " + currContext()!!.getString(
+                        "Update " + currContext()!!.getString(
                             R.string.available
                         )
                     )
@@ -182,7 +183,7 @@ object AppUpdater {
     private fun compareVersion(version: String): Boolean {
         return when (BuildConfig.BUILD_TYPE) {
             "debug" -> BuildConfig.VERSION_NAME != version
-            "alpha" -> BuildConfig.VERSION_NAME != version
+            "alpha" -> BuildConfig.VERSION_NAME.removeSuffix("-alpha01") != version
             else -> {
                 fun toDoubleSafe(list: List<String>): Double {
                     return list.mapIndexed { i, s ->
