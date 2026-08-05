@@ -59,6 +59,7 @@ jobs:
           echo "Version: $VERSION"
 
       - name: Apply Santotsu Alpha renaming
+        if: false
         run: |
           sed -i 's/ani.dantotsu.beta/ani.dantotsu.betas/g' app/google-services.json || true
           sed -i 's/ani.dantotsu.alpha/ani.dantotsu.alphas/g' app/google-services.json || true
