@@ -224,6 +224,7 @@ jobs:
           path: app/build/outputs/apk/google/alpha/*.apk
 
       - name: Upload to Telegram
+        if: false
         env:
           VERSION: ${{ needs.check-updates.outputs.VERSION }}
           COMMIT_LOG: ${{ steps.commit-log.outputs.COMMIT_LOG }}
